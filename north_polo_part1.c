@@ -19,7 +19,7 @@ int main(void){
     while (fgets(row, ROW_SIZE, f_ptr)){
         int shift = read_instruction(row);
         int new_pos = position + shift;
-        if (new_pos >= 100 || new_pos < 0) position = overflow(new_pos);
+        if (new_pos < 0 || new_pos >= 100) position = overflow(new_pos);
         else position = new_pos;
         if (position == 0) counter++;
     }
