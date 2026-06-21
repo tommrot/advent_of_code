@@ -33,8 +33,7 @@ void invalid_id_in_range(long long start, long long end, long long *sum){
     }
 }
 
-
-int is_invalid_id(long long n){
+int is_invalid(long long n){
     char buf[32];
     sprintf(buf, "%lld", n);
     int len = strlen(buf);
@@ -42,12 +41,12 @@ int is_invalid_id(long long n){
         if (len % L != 0) continue;
         int intervals = len / L;
         int looks_invalid = 1;
-        for (int i = 1; i < intervals && looks_invalid; i++){
-            for (int s = 0; s < L; s++){
-                if (buf[s] != buf[i * L + s]){looks_invalid = 0; break;}   //if not equals for i L = 1, we break cycle on s, exit from cycle on i cuz flag = 0 and comeback to line 41
+        for (int i = 1; i < intervals && looks_invalid == 1; i++){
+            for (int j = 0; j < L; j++){
+                if (buf[j] != buf[i * L + j]) {looks_invalid = 0; break;}
             }
-        }
-        if (looks_invalid) return 1;     // if every interval is equal we return 1 without reitering L cycle
-    } 
+        }   
+        if (looks_invalid == 1) return 1;     
+    }
     return 0;
 }
