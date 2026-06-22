@@ -33,20 +33,20 @@ void invalid_id_in_range(long long start, long long end, long long *sum){
     }
 }
 
-int is_invalid(long long n){
+int is_invalid_id(long long n){
     char buf[32];
     sprintf(buf, "%lld", n);
     int len = strlen(buf);
-    for (int L = 1; L < len; L++){
-        if (len % L != 0) continue;
-        int intervals = len / L;
+    for (int i = 1; i < len; i++){
+        if (len % i != 0) continue;
+        int intervals = len / i;
         int looks_invalid = 1;
-        for (int i = 1; i < intervals && looks_invalid == 1; i++){
-            for (int j = 0; j < L; j++){
-                if (buf[j] != buf[i * L + j]) {looks_invalid = 0; break;}
+        for (int j = 1; j < intervals && looks_invalid == 1; j++){
+            for (int k = 0; k < i; k++){
+                if (buf[k] != buf[j * i + k]) {looks_invalid = 0; break;}   // looks_invalid = 0 to exit from j cycle and itering on new intarval range in i cycle
             }
-        }   
-        if (looks_invalid == 1) return 1;     
-    }
+        }
+        if (looks_invalid) return 1;
+    } 
     return 0;
 }
