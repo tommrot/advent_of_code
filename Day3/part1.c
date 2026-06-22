@@ -17,6 +17,7 @@ int main(void){
     while (fgets(row, ROW_SIZE, f_ptr)){
         compute_joltage(row, &sum);
     }
+    free(row);
     printf("sum of joltage is: %d\n", sum);
 }
 
