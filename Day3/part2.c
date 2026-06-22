@@ -21,28 +21,22 @@ int main(void){
 
 
 void compute_joltage(char *row, long long *sum) {
+    char *result = malloc(sizeof(char) * 13);
+    int position = 0;
     int len = strlen(row);
-    if (row[len - 1] == '\n') len--;  // rimuovi newline se presente
-
-    char *result = malloc(12 + 1);
-    int pos = 0;  // da dove possiamo iniziare a cercare
-
-    for (int slot = 0; slot < 12; slot++) {
-        int remaining_needed = 12 - slot - 1;
-        int search_end = len - remaining_needed - 1;  // ultimo indice valido
-
-        int best = pos;
-        for (int j = pos + 1; j <= search_end; j++) {
-            if (row[j] > row[best]) {
-                best = j;
-            }
+    if (row[len - 1] == '\n') len--;
+    
+    for (int i = 0; i < 12; i++){
+        int least_needed = 12 - i - 1;
+        int stop = len - 1 - least_needed;
+        int best = position;
+        for (int j = position; j <= stop; j++){
+            if (row[j] > row[best]) best = j;
         }
-
-        result[slot] = row[best];
-        pos = best + 1;
+        result[i] = row[best];
+        position = best + 1;
     }
     result[12] = '\0';
-
     *sum += atoll(result);
     free(result);
 }
