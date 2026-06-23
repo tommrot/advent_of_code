@@ -39,20 +39,19 @@ int main(void){
 
 void check_forklist(char *row, char *next_row, char *prev_row, int *counter){
     int inside_count = 0;
-    int length = strcspn(row, "\r\n");
-    for (int i = 0; i < length; i++){
+    for (int i = 0; i < ROW_SIZE; i++){
         if (row[i] == '@'){
             inside_count = 0;
             for (int j = i - 1; j <= i + 1; j++){
-                if (j < 0 || j > length) continue;
+                if (j < 0 || j > ROW_SIZE) continue;
                 if (prev_row[j] == '@') inside_count++;
             }
             for (int j = i - 1; j <= i + 1; j++){
-                if (j < 0 || j == i || j > length) continue;
+                if (j < 0 || j == i || j > ROW_SIZE) continue;
                 if (row[j] == '@') inside_count++;
             }           
             for (int j = i - 1; j <= i + 1; j++){
-                if (j < 0 || j > length) continue;
+                if (j < 0 || j > ROW_SIZE) continue;
                 if (next_row[j] == '@') inside_count++; 
             }
             if (inside_count < 4) (*counter)++;
