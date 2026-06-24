@@ -39,8 +39,13 @@ int main(void){
 
     for (int i = 0; i < ID_LIST; i++){
         result += is_fresh(id_to_check[i], fresh_ranges_id);
+        free(id_to_check[i]);
     }
-    printf("fresh ingredients are: %d", result);
+    for (int i = 0; i < FRESH_RANGES; i++){
+        free(fresh_ranges_id[i]);
+    }
+
+    printf("fresh ingredients are: %d\n", result);
     return 0;
 }
 
@@ -53,8 +58,8 @@ int is_fresh(char *id_to_check, char **ranges){
         strcpy(range_row, ranges[i]);
         long long start = atoll(strtok(range_row, "-"));
         long long end = atoll(strtok(NULL, "\n"));
-        if (start <= id && id <= end) return 1;
         free(range_row);
+        if (start <= id && id <= end) return 1;
     }
     return 0;
 }
