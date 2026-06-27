@@ -5,6 +5,9 @@
 #define ROW_SIZE 142
 #define COLUMS 140
 
+int forklist_check_for_row(char *row, char *prev_row, char* next_row);
+
+
 int main(void){
     int total_counter = 0;
     FILE *file_ptr = fopen("forklift.txt", "r");
@@ -41,8 +44,11 @@ int main(void){
             strcpy(prev_row, original_row);
             strcpy(matrix[i], row);
         }
+        total_counter += added_for_matrix;
         if (added_for_matrix == 0) break;
     }
+
+    printf("we can fork %d papers\n", total_counter);
 }
 
 
