@@ -3,82 +3,71 @@
 #include <string.h>
 
 #define ROW_SIZE 142
-#define COL_SIZE 140
-
-
-int check_forks_for_row(char *row, char *next_row, char *prev_row, int *counter);
-
-
+#define COLUMS 140
 
 int main(void){
-    int total_forks_count = 0;
-    
-    char matrix[COL_SIZE][ROW_SIZE];
-
+    int total_counter = 0;
     FILE *file_ptr = fopen("forklift.txt", "r");
-    if (file_ptr == NULL) EXIT_FAILURE;
+    if (file_ptr == NULL) exit(0);
 
-    for (int i = 0; i < COL_SIZE; i++){
-        if (fgets(matrix[i], ROW_SIZE, file_ptr) == NULL) break;
+    char matrix[COLUMS][ROW_SIZE];
+
+    char row[ROW_SIZE];
+    char prev_row[ROW_SIZE];
+    char next_row[ROW_SIZE];
+
+    for (int i = 0; i < COLUMS; i++){
+        fgets(matrix[i], ROW_SIZE, file_ptr);
     }
-    fclose(file_ptr);
-
-    char *row = malloc(ROW_SIZE);
-    char *prev_row = malloc(ROW_SIZE);
-    char *next_row = malloc(ROW_SIZE);
-
 
     while (1){
-        for (int j = 0; j < ROW_SIZE; j++) prev_row[j] = '.';
-        int cycle_forks_count = 0;
-
-        for (int i = 0; i < COL_SIZE; i++){
+        int added_for_matrix = 0;
+        for (int i = 0; i < COLUMS; i++){
             strcpy(row, matrix[i]);
-            char *original_row = malloc(ROW_SIZE);
+            char original_row[ROW_SIZE];
             strcpy(original_row, row);
-
-            if (i == COL_SIZE - 1){
+            if (i == 0) {
+                for (int j = 0; j < ROW_SIZE; j++) prev_row[j] = '.';
+            } else {
+                strcpy(prev_row, matrix[i - 1]);
+            }
+            if (i == COLUMS - 1) {
                 for (int j = 0; j < ROW_SIZE; j++) next_row[j] = '.';
             } else {
                 strcpy(next_row, matrix[i + 1]);
             }
-            cycle_forks_count += check_forks_for_row(row, next_row, prev_row, &total_forks_count);
+            added_for_matrix += forklist_check_for_row(row, prev_row, next_row);  
             
             strcpy(prev_row, original_row);
             strcpy(matrix[i], row);
         }
-        if (cycle_forks_count == 0) break;
+        if (added_for_matrix == 0) break;
     }
-    printf("can be removed %d rolls of paper\n", total_forks_count);
 }
 
 
-int check_forks_for_row(char *row, char *next_row, char *prev_row, int *counter){
-    int forked = 0;
-    char *original_row = malloc(ROW_SIZE);
-    strcpy(original_row, row);
+
+int forklist_check_for_row(char *row, char *prev_row, char* next_row){
+    int counter = 0;
     for (int i = 0; i < ROW_SIZE; i++){
-        int inside_count = 0;
         if (row[i] == '@'){
+            int internal_counter = 0;
             for (int j = i - 1; j <= i + 1; j++){
-                if (j < 0 || j > ROW_SIZE) continue;
-                if (prev_row[j] == '@') inside_count++;
-            }
-            for (int j = i - 1; j <= i + 1; j++){
-                if (j < 0 || j == i || j > ROW_SIZE) continue;
-                if (original_row[j] == '@') inside_count++;
+                if (j < 0 || j >= ROW_SIZE ) continue;
+                if (prev_row[j] == '@') internal_counter++;
             }
             for (int j = i - 1; j <= i + 1; j++){
-                if (j < 0 || j > ROW_SIZE) continue;
-                if (next_row[j] == '@') inside_count++;
+                if (j < 0 || j == i || j >= ROW_SIZE) continue;
+                if (row[j] == '@') internal_counter++;
             }
-            if (inside_count < 4) {
-                row[i] = '.';
-                (*counter)++;
-                forked++;
+            for (int j = i - 1; j <= i + 1; j++){
+                if (j < 0 || j >= ROW_SIZE) continue;
+                if (next_row[j] == '@') internal_counter++;
             }
+            if (internal_counter < 4) {row[i] = '.'; counter++;}
         }
     }
-    free(original_row);
-    return forked;
+    return counter;
 }
+
+
